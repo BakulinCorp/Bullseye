@@ -16,10 +16,19 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             BackgroundView(game: $game)
+            
             VStack {
                 InstructionsView(game: $game)
-                SliderView(sliderValue: $sliderValue)
-                HitMeButton(alertIsVisible: $alertIsVisible, sliderValue: $sliderValue, game: $game)
+                    .padding(.bottom, alertIsVisible ?
+                             0 : 100)
+                if alertIsVisible {
+                    PointsView(alertIsVisible: $alertIsVisible, sliderValue: $sliderValue, game: $game)
+                } else {
+                    HitMeButton(alertIsVisible: $alertIsVisible, sliderValue: $sliderValue, game: $game)
+                }
+            }
+            if !alertIsVisible {
+            SliderView(sliderValue: $sliderValue)
             }
         }
     }
@@ -80,15 +89,15 @@ struct HitMeButton: View {
             RoundedRectangle(cornerRadius: 21.0)
                 .strokeBorder(Color.white, lineWidth: 2)
         )
-        .alert(isPresented: $alertIsVisible, content: {
-            let roundedValue = Int(sliderValue.rounded())
-            let points = game.points(sliderValue: roundedValue)
-            return Alert(title: Text("Hello there!"),
-                         message: Text("The slider's value is \(roundedValue).\n" + "You scored \(points) points this round."),
-                         dismissButton: .default(Text("Awesome!")) {
-                game.startNewRound(points: points)
-            })
-        })
+        //        .alert(isPresented: $alertIsVisible, content: {
+        //            let roundedValue = Int(sliderValue.rounded())
+        //            let points = game.points(sliderValue: roundedValue)
+        //            return Alert(title: Text("Hello there!"),
+        //                         message: Text("The slider's value is \(roundedValue).\n" + "You scored \(points) points this round."),
+        //                         dismissButton: .default(Text("Awesome!")) {
+        //                game.startNewRound(points: points)
+        //            })
+        //        })
     }
 }
 
